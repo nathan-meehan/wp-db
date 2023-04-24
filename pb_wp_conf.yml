@@ -5,7 +5,7 @@
   vars:
     - db_name: wpdb
     - db_user: admin
-    - db_pass: tele20483
+    - db_pass: 
     - db_host: 
   tasks:
     - name: download wordpress 

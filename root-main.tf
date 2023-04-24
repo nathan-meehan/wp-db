@@ -15,7 +15,7 @@ provider "aws" {
 
 module "sg" {
     source = "./sg"
-    vpc_id = "vpc-04f5b65a95c7b93fc"
+    vpc_id = ""
 }
 
 module "wpdb" {
@@ -27,11 +27,11 @@ module "wpdb" {
 
 module "wp" {
     source = "./wp"
-    sn_id = "subnet-08445609bbb5dda60"
+    sn_id = ""
     sg_id = module.sg.sg_id
     db_host = module.wpdb.db_endpoint
     db_sg_id = module.sg.db_sg_id
-    pvt_key = "./nathan-m-kp.pem"
+    pvt_key = "./"
 
 }
 
