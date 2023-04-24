@@ -5,12 +5,12 @@ resource "aws_instance" "tf_wp" {
   subnet_id                   = var.sn_id
   vpc_security_group_ids      = [var.sg_id]
   associate_public_ip_address = true
-  key_name = "nathan-m-kp"
+  key_name = ""
   user_data                   = filebase64("${path.module}/web.sh")
 
 
     provisioner "remote-exec" {
-        inline = ["sleep 20"]
+        inline = ["sleep 5"]
 
         connection {
         host        = self.public_ip

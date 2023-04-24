@@ -5,33 +5,36 @@
   vars:
     - db_name: wpdb
     - db_user: admin
-    - db_pass: 
+    - db_pass: tele20483
     - db_host: 
   tasks:
     - name: download wordpress 
       ansible.builtin.get_url:
         url: https://wordpress.org/latest.tar.gz
-        dest: ~/
+        dest: /etc/wp-latest.tar.gz
 
     - name: extract wordpress
       ansible.builtin.unarchive:
-        src: /var/www/html/latest.tar.gz
-        dest: ~/
+        src: /etc/wp-latest.tar.gz
+        dest: /etc/
         remote_src: true
 
-    - name: copy wp to html
-      ansible.builtin.copy:
-        src: ~/wordpress/*
-        dest: /var/www/html/
+    - name: move wp files
+      shell: mv /etc/wordpress/* /var/www/html
 
     - name: download auth info
       ansible.builtin.get_url:
         url: https://api.wordpress.org/secret-key/1.1/salt/
-        dest: ~/wp-auth
+        dest: /home/ec2-user/wp-auth
 
-    - name: create variables from auth file
-      set_vars:
-        db_auth: "{{ lookup('ansible.builtin.file', '~/wp-auth') }}"
+    - name: get contents of file
+      slurp:
+        src: "/home/ec2-user/wp-auth"
+      register: db_auth
+
+    - name: decode file
+      set_fact:
+        db_auth: "{{ db_auth.content | b64decode }}"
     
     - name: template wp-config
       ansible.builtin.template:
@@ -42,7 +45,4 @@
       ansible.builtin.systemd:
         state: restarted
         name: httpd
-
-
-
   
