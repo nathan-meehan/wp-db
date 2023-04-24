@@ -1,0 +1,48 @@
+---
+- name: configure ec2 wordpress
+  hosts: all
+  gather_facts: false
+  vars:
+    - db_name: wpdb
+    - db_user: admin
+    - db_pass: tele20483
+    - db_host: 
+  tasks:
+    - name: download wordpress 
+      ansible.builtin.get_url:
+        url: https://wordpress.org/latest.tar.gz
+        dest: ~/
+
+    - name: extract wordpress
+      ansible.builtin.unarchive:
+        src: /var/www/html/latest.tar.gz
+        dest: ~/
+        remote_src: true
+
+    - name: copy wp to html
+      ansible.builtin.copy:
+        src: ~/wordpress/*
+        dest: /var/www/html/
+
+    - name: download auth info
+      ansible.builtin.get_url:
+        url: https://api.wordpress.org/secret-key/1.1/salt/
+        dest: ~/wp-auth
+
+    - name: create variables from auth file
+      set_vars:
+        db_auth: "{{ lookup('ansible.builtin.file', '~/wp-auth') }}"
+    
+    - name: template wp-config
+      ansible.builtin.template:
+        src: ./templates/wp-config.j2
+        dest: /var/www/html/wp-config.php
+
+    - name: restart httpd
+      ansible.builtin.systemd:
+        state: restarted
+        name: httpd
+
+
+
+  
