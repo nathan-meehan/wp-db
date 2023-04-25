@@ -23,16 +23,14 @@ module "wpdb" {
     sg_id = module.sg.db_sg_id
 }
 
-
-
 module "wp" {
     source = "./wp"
     sn_id = ""
     sg_id = module.sg.sg_id
     db_host = module.wpdb.db_endpoint
     db_sg_id = module.sg.db_sg_id
-    pvt_key = "./"
-
+    pvt_key_path = "./"
+    pvt_key_name = ""
 }
 
 

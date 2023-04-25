@@ -5,7 +5,7 @@ resource "aws_instance" "tf_wp" {
   subnet_id                   = var.sn_id
   vpc_security_group_ids      = [var.sg_id]
   associate_public_ip_address = true
-  key_name = ""
+  key_name = var.pvt_key_name
   user_data                   = filebase64("${path.module}/web.sh")
 
 
@@ -16,12 +16,12 @@ resource "aws_instance" "tf_wp" {
         host        = self.public_ip
         type        = "ssh"
         user        = "ec2-user"
-        private_key = file(var.pvt_key)
+        private_key = file(var.pvt_key_path)
         }
     }
 
     provisioner "local-exec" {
-        command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${self.public_ip},' --private-key ${var.pvt_key} --extra-vars 'db_host=${var.db_host}' pb_wp_conf.yml"
+        command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${self.public_ip},' --private-key ${var.pvt_key_path} --extra-vars 'db_host=${var.db_host}' pb_wp_conf.yml"
     }
     
 
