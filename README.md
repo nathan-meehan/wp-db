@@ -1,5 +1,5 @@
 # wp-db
-Terraform project that deploys a MySQL instance with a web server running WordPress. Ansible is used to do the inital wordpress config. 
+Terraform project that deploys a MySQL instance with a web server running WordPress. Ansible is used to do the inital WordPress config. 
 
 ## Requirements
 - AWS Account + way to connect credentials to terraform 
